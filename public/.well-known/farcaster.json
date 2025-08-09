@@ -7,11 +7,11 @@
         },
       
   "miniapp": {
-    "version": "1",
+    "version": "vNext",
     "name": "Sudoku",
-    "iconUrl": "https://sudoku-rouge-zeta.vercel.app/sudoku.png?v=2",
-    "splashImageUrl": "https://sudoku-rouge-zeta.vercel.app/sudoku.png?v=2",
-    "homeUrl": "https://sudoku-rouge-zeta.vercel.app/",
+    "iconUrl": "https://sudoku-rouge-zeta.vercel.app/sudoku.png?v=3",
+    "splashImageUrl": "https://sudoku-rouge-zeta.vercel.app/sudoku.png?v=3",
+    "homeUrl": "https://sudoku-rouge-zeta.vercel.app",
     "description": "A challenging Sudoku game.",
     "theme": { "backgroundColor": "#ffffff" }
   }
