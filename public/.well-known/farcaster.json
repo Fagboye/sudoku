@@ -1,0 +1,19 @@
+{
+  "accountAssociation": {
+    "token": "REPLACE_WITH_YOUR_TOKEN",
+    "signature": "REPLACE_WITH_YOUR_SIGNATURE"
+  },
+  "miniapp": {
+    "version": "vNext",
+    "name": "Sudoku",
+    "iconUrl": "/sudoku.png",
+    "splashImageUrl": "/sudoku.png",
+    "homeUrl": "/",
+    "description": "A challenging Sudoku game.",
+    "theme": {
+      "backgroundColor": "#ffffff"
+    }
+  }
+}
+
+

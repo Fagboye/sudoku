@@ -1,103 +1,191 @@
-import Image from "next/image";
+"use client";
+
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import SudokuBoard from "@/components/SudokuBoard";
+import NumberPad from "@/components/NumberPad";
+import { sdk } from "@farcaster/miniapp-sdk";
+import {
+  type SudokuBoard as Board,
+  generatePuzzle,
+  isValidPlacement,
+  copyBoard,
+  boardsEqual,
+  isSolved,
+} from "@/lib/sudoku";
+
+type GameState = {
+  startingBoard: Board;
+  currentBoard: Board;
+  solution: Board;
+};
+
+function formatTime(seconds: number): string {
+  const m = Math.floor(seconds / 60)
+    .toString()
+    .padStart(2, "0");
+  const s = (seconds % 60).toString().padStart(2, "0");
+  return `${m}:${s}`;
+}
 
 export default function Home() {
-  return (
-    <div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="font-mono list-inside list-decimal text-sm/6 text-center sm:text-left">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] font-mono font-semibold px-1 py-0.5 rounded">
-              app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+  const [game, setGame] = useState<GameState | null>(null);
+  const [selected, setSelected] = useState<{ row: number; col: number } | null>(null);
+  // Fixed difficulty: hard
+  const [seconds, setSeconds] = useState(0);
+  const [isRunning, setIsRunning] = useState(false);
+  const [conflicts, setConflicts] = useState<Set<string>>(new Set());
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+  const timerRef = useRef<number | null>(null);
+
+  const newGame = useCallback(() => {
+      const { puzzle, solution } = generatePuzzle("hard");
+      const initial: GameState = {
+        startingBoard: copyBoard(puzzle),
+        currentBoard: copyBoard(puzzle),
+        solution,
+      };
+      setGame(initial);
+      setSelected(null);
+      setSeconds(0);
+      setIsRunning(false);
+      setConflicts(new Set());
+  }, []);
+
+  useEffect(() => {
+    if (!game) newGame();
+  }, [game, newGame]);
+
+  useEffect(() => {
+    if (!isRunning) return;
+    const id = window.setInterval(() => setSeconds((s) => s + 1), 1000);
+    timerRef.current = id;
+    return () => {
+      clearInterval(id);
+    };
+  }, [isRunning]);
+
+  // Signal Farcaster Mini App readiness once UI is mounted and initial game state exists
+  useEffect(() => {
+    if (game) {
+      // Do not block render; a simple call is enough
+      sdk.actions.ready().catch(() => {});
+    }
+  }, [game]);
+
+  const handleInput = useCallback(
+    (value: number) => {
+      if (!game || !selected) return;
+      const { row, col } = selected;
+      if (game.startingBoard[row][col] !== 0) return; // cannot edit givens
+
+      const next = copyBoard(game.currentBoard);
+      next[row][col] = value;
+
+      // compute conflicts: highlight any cell that breaks Sudoku rules
+      const newConflicts = new Set<string>();
+      for (let r = 0; r < 9; r += 1) {
+        for (let c = 0; c < 9; c += 1) {
+          const v = next[r][c];
+          if (v === 0) continue;
+          const valid = isValidPlacement(next, r, c, v);
+          if (!valid) newConflicts.add(`${r}-${c}`);
+        }
+      }
+
+    setGame({ ...game, currentBoard: next });
+      setConflicts(newConflicts);
+
+    if (!isRunning && seconds === 0) {
+      setIsRunning(true);
+    }
+
+      if (isSolved(next)) {
+        setIsRunning(false);
+      }
+    },
+    [game, selected],
+  );
+
+  const handleErase = useCallback(() => {
+    if (!game || !selected) return;
+    const { row, col } = selected;
+    if (game.startingBoard[row][col] !== 0) return;
+    const next = copyBoard(game.currentBoard);
+    next[row][col] = 0;
+    setGame({ ...game, currentBoard: next });
+    // recompute conflicts
+    const newConflicts = new Set<string>();
+    for (let r = 0; r < 9; r += 1) {
+      for (let c = 0; c < 9; c += 1) {
+        const v = next[r][c];
+        if (v === 0) continue;
+        const valid = isValidPlacement(next, r, c, v);
+        if (!valid) newConflicts.add(`${r}-${c}`);
+      }
+    }
+    setConflicts(newConflicts);
+  }, [game, selected]);
+
+  const resetBoard = useCallback(() => {
+    if (!game) return;
+    setGame({ ...game, currentBoard: copyBoard(game.startingBoard) });
+    setSelected(null);
+    setSeconds(0);
+    setIsRunning(false);
+    setConflicts(new Set());
+  }, [game]);
+
+  const giveNewGame = useCallback(() => {
+    newGame();
+  }, [newGame]);
+
+  const solved = useMemo(() => game && boardsEqual(game.currentBoard, game.solution), [game]);
+
+  if (!game) return null;
+
+  return (
+    <div className="min-h-screen flex flex-col items-center justify-center p-3 sm:p-6 gap-4 sm:gap-6 bg-gradient-to-b from-neutral-50 to-neutral-100 dark:from-neutral-950 dark:to-neutral-900">
+      <h1 className="text-3xl font-semibold tracking-tight">Sudoku</h1>
+
+      <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 items-center justify-center w-full max-w-[1100px]">
+        <SudokuBoard
+          startingBoard={game.startingBoard}
+          currentBoard={game.currentBoard}
+          onChangeCell={(r, c, v) => handleInput(v)}
+          selectedCell={selected}
+          setSelectedCell={setSelected}
+          conflicts={conflicts}
+        />
+
+        <div className="flex flex-col gap-3 sm:gap-4 min-w-48 items-center text-center w-full sm:w-auto">
+          <div className="text-lg">
+            Time: <span className="font-mono px-2 py-1 rounded bg-white/70 dark:bg-neutral-800/70 shadow-sm">{formatTime(seconds)}</span>
+          </div>
+
+          {/* Difficulty removed: fixed to hard */}
+
+          <div className="flex gap-2 justify-center w-full">
+            <button
+              onClick={resetBoard}
+              className="px-3 py-2 rounded-md bg-neutral-200 dark:bg-neutral-800 hover:bg-neutral-300 dark:hover:bg-neutral-700 shadow"
+            >
+              Reset
+            </button>
+            <button
+              onClick={giveNewGame}
+              className="px-3 py-2 rounded-md bg-blue-600 text-white hover:bg-blue-700 shadow"
+            >
+              New game
+            </button>
+          </div>
+
+          <NumberPad onInput={handleInput} onErase={handleErase} />
+
+          {solved ? (
+            <div className="text-emerald-600 dark:text-emerald-400 font-medium">Solved! 🎉</div>
+          ) : null}
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+      </div>
     </div>
   );
 }

@@ -1,0 +1,73 @@
+<!--?xml version="1.0" encoding="utf-8"?-->
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512" role="img" aria-labelledby="title desc">
+  <title id="title">Sudoku Icon</title>
+  <desc id="desc">Rounded square containing a 3 by 3 Sudoku grid with a highlighted cell.</desc>
+
+  <defs>
+    <!-- colors are defined as CSS variables for easy editing -->
+    <style>
+      :root{
+        --bg:#0f172a;        /* background */
+        --card:#ffffff;      /* card / grid background */
+        --stroke:#0f172a;    /* grid/outline color */
+        --accent:#ff7a59;    /* highlight / accent */
+        --text:#0f172a;      /* numbers color */
+      }
+      .shadow { filter: drop-shadow(0 8px 20px rgba(8,10,20,0.45)); }
+      .grid-line { stroke: var(--stroke); stroke-linecap:round; }
+      .block-line { stroke: var(--stroke); stroke-width:7; stroke-linecap:round; }
+      .thin-line { stroke: var(--stroke); stroke-width:2.5; stroke-linecap:round; }
+      .cell { fill: var(--card); }
+      .accent { fill: var(--accent); }
+      .num { fill: var(--text); font-family: "Inter", "Segoe UI", Roboto, sans-serif; font-weight:700; }
+    </style>
+    <linearGradient id="g" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0" stop-color="#2b3446"></stop>
+      <stop offset="1" stop-color="#0f172a"></stop>
+    </linearGradient>
+  </defs>
+
+  <!-- background -->
+  <rect x="0" y="0" width="512" height="512" rx="64" fill="url(#g)"></rect>
+
+  <!-- card with subtle shadow -->
+  <g transform="translate(56,56)" class="shadow">
+    <rect x="0" y="0" width="400" height="400" rx="28" class="cell"></rect>
+    <!-- outer border -->
+    <rect x="0" y="0" width="400" height="400" rx="28" fill="none" class="thin-line" stroke-width="2.5"></rect>
+    <!-- 3x3 grid: 4 vertical and 4 horizontal lines -->
+    <!-- vertical thin lines -->
+    <g stroke-width="2.5" class="thin-line">
+      <line x1="133.333" y1="0" x2="133.333" y2="400"></line>
+      <line x1="266.666" y1="0" x2="266.666" y2="400"></line>
+    </g>
+    <!-- horizontal thin lines -->
+    <g stroke-width="2.5" class="thin-line">
+      <line x1="0" y1="133.333" x2="400" y2="133.333"></line>
+      <line x1="0" y1="266.666" x2="400" y2="266.666"></line>
+    </g>
+    <!-- heavier block outlines to emphasize 3x3 blocks -->
+    <g class="block-line" fill="none">
+      <rect x="0" y="0" width="400" height="400" rx="28" fill="none"></rect>
+      <line x1="0" y1="133.333" x2="400" y2="133.333"></line>
+      <line x1="0" y1="266.666" x2="400" y2="266.666"></line>
+      <line x1="133.333" y1="0" x2="133.333" y2="400"></line>
+      <line x1="266.666" y1="0" x2="266.666" y2="400"></line>
+    </g>
+
+    <!-- highlighted cell (center) -->
+    <rect x="133.333" y="133.333" width="133.333" height="133.333" rx="8" class="accent" opacity="0.98"></rect>
+
+    <!-- numbers (example layout) -->
+    <text x="64" y="96" font-size="48" class="num">8</text>
+    <text x="200" y="96" font-size="48" class="num">2</text>
+    <text x="336" y="96" font-size="48" class="num">7</text>
+
+    <text x="64" y="232" font-size="64" class="num">5</text> <!-- highlighted center number -->
+    <text x="336" y="232" font-size="48" class="num">1</text>
+
+    <text x="64" y="368" font-size="48" class="num">4</text>
+    <text x="200" y="368" font-size="48" class="num">3</text>
+    <text x="336" y="368" font-size="48" class="num">9</text>
+  </g>
+</svg>
