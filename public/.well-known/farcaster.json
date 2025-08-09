@@ -4,15 +4,13 @@
     "signature": "REPLACE_WITH_YOUR_SIGNATURE"
   },
   "miniapp": {
-    "version": "vNext",
+    "version": "1",
     "name": "Sudoku",
-    "iconUrl": "/sudoku.png",
-    "splashImageUrl": "/sudoku.png",
-    "homeUrl": "/",
+    "iconUrl": "https://sudoku-rouge-zeta.vercel.app/sudoku.png",
+    "splashImageUrl": "https://sudoku-rouge-zeta.vercel.app/sudoku.png",
+    "homeUrl": "https://sudoku-rouge-zeta.vercel.app/",
     "description": "A challenging Sudoku game.",
-    "theme": {
-      "backgroundColor": "#ffffff"
-    }
+    "theme": { "backgroundColor": "#ffffff" }
   }
 }
 
