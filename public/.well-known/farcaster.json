@@ -9,8 +9,8 @@
   "miniapp": {
     "version": "1",
     "name": "Sudoku",
-    "iconUrl": "https://sudoku-rouge-zeta.vercel.app/sudoku.png",
-    "splashImageUrl": "https://sudoku-rouge-zeta.vercel.app/sudoku.png",
+    "iconUrl": "https://sudoku-rouge-zeta.vercel.app/sudoku.svg",
+    "splashImageUrl": "https://sudoku-rouge-zeta.vercel.app/sudoku.svg",
     "homeUrl": "https://sudoku-rouge-zeta.vercel.app/",
     "description": "A challenging Sudoku game.",
     "theme": { "backgroundColor": "#ffffff" }
