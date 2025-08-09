@@ -12,6 +12,7 @@ import {
   boardsEqual,
   isSolved,
 } from "@/lib/sudoku";
+import Head from "next/head";
 
 type GameState = {
   startingBoard: Board;
@@ -26,6 +27,21 @@ function formatTime(seconds: number): string {
   const s = (seconds % 60).toString().padStart(2, "0");
   return `${m}:${s}`;
 }
+
+const embed = {
+  version: "1",
+  imageUrl: `https://sudoku-rouge-zeta.vercel.app/sudoku.png?v=3`,
+  button: {
+    title: "Launch Sudoku",
+    action: {
+      type: "launch_frame",
+      name: "Sudoku",
+      url: "https://sudoku-rouge-zeta.vercel.app",
+      splashImageUrl: `https://sudoku-rouge-zeta.vercel.app/sudoku.png?v=3`,
+      splashBackgroundColor: "#ffffff"
+    }
+  }
+};
 
 export default function Home() {
   const [game, setGame] = useState<GameState | null>(null);
@@ -144,6 +160,11 @@ export default function Home() {
   if (!game) return null;
 
   return (
+    <>
+    <Head>
+        <meta name="fc:miniapp" content={JSON.stringify(embed)} />
+        <meta name="fc:frame" content={JSON.stringify(embed)} />
+      </Head>
     <div className="min-h-screen flex flex-col items-center justify-center p-3 sm:p-6 gap-4 sm:gap-6 bg-gradient-to-b from-neutral-50 to-neutral-100 dark:from-neutral-950 dark:to-neutral-900">
       <h1 className="text-3xl font-semibold tracking-tight">Sudoku</h1>
 
@@ -187,5 +208,6 @@ export default function Home() {
         </div>
       </div>
     </div>
+    </>
   );
 }
