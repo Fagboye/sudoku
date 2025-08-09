@@ -7,7 +7,7 @@
         },
       
   "miniapp": {
-    "version": "vNext",
+    "version": "1",
     "name": "Sudoku",
     "iconUrl": "https://sudoku-rouge-zeta.vercel.app/sudoku.png?v=3",
     "splashImageUrl": "https://sudoku-rouge-zeta.vercel.app/sudoku.png?v=3",
