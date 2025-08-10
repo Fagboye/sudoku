@@ -1,4 +1,3 @@
-"use server";
 import "server-only";
 import { neon, neonConfig } from "@neondatabase/serverless";
 
