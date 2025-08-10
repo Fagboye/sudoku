@@ -1,11 +1,9 @@
 {
-
-    "accountAssociation": {
-        "header": "eyJmaWQiOjg5NjkxNCwidHlwZSI6ImN1c3RvZHkiLCJrZXkiOiIweDgzMTBGQjFmZjBjM2FEQ2U4Y2E4NzY0ODIxNDVDQjcyODc1OGI1NUIifQ",
-        "payload": "eyJkb21haW4iOiJzdWRva3Utcm91Z2UtemV0YS52ZXJjZWwuYXBwIn0",
-        "signature": "MHgyODkzMGViN2EyZDdjMzBjOTkzOTgyN2ExY2IwMjFmYzEyYzkyMTQ3MmQ1OWE0NjhiN2JmYmY4YjczZjc0YjMwMTU2ZDdiYzFiNWVlZWRjMTE3YWU2Y2E1MWViZDMzMDAyMTIxOGY4OGRhNTg2NzAwMWI4ZGQ0NTNjNDlkNjJiNDFi"
-        },
-      
+  "accountAssociation": {
+    "header": "eyJmaWQiOjg5NjkxNCwidHlwZSI6ImN1c3RvZHkiLCJrZXkiOiIweDgzMTBGQjFmZjBjM2FEQ2U4Y2E4NzY0ODIxNDVDQjcyODc1OGI1NUIifQ",
+    "payload": "eyJkb21haW4iOiJzdWRva3Utcm91Z2UtemV0YS52ZXJjZWwuYXBwIn0",
+    "signature": "MHgyODkzMGViN2EyZDdjMzBjOTkzOTgyN2ExY2IwMjFmYzEyYzkyMTQ3MmQ1OWE0NjhiN2JmYmY4YjczZjc0YjMwMTU2ZDdiYzFiNWVlZWRjMTE3YWU2Y2E1MWViZDMzMDAyMTIxOGY4OGRhNTg2NzAwMWI4ZGQ0NTNjNDlkNjJiNDFi"
+  },
   "miniapp": {
     "version": "1",
     "name": "Sudoku",

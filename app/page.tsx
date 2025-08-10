@@ -35,6 +35,9 @@ export default function Home() {
   const [seconds, setSeconds] = useState(0);
   const [isRunning, setIsRunning] = useState(false);
   const [conflicts, setConflicts] = useState<Set<string>>(new Set());
+  const [fid, setFid] = useState<number | null>(null);
+  const [boardSubmitted, setBoardSubmitted] = useState(false);
+  const [leaders, setLeaders] = useState<Array<{ fid: number; best_seconds: number }>>([]);
 
   const timerRef = useRef<number | null>(null);
 
@@ -65,13 +68,42 @@ export default function Home() {
     };
   }, [isRunning]);
 
-  // Signal Farcaster Mini App readiness once UI is mounted and initial game state exists
+  // Signal Farcaster Mini App readiness immediately on mount
   useEffect(() => {
-    if (game) {
-      // Do not block render; a simple call is enough
-      sdk.actions.ready().catch(() => {});
-    }
+    sdk.actions.ready().catch(() => {});
+  }, []);
+
+  // auto-attempt Quick Auth once the UI is ready (will be silent if a token already exists)
+  useEffect(() => {
+    if (!game) return;
+    (async () => {
+      try {
+        const { token } = await sdk.quickAuth.getToken(); // returns silently if already authorized
+        const payload = decodeJwtPayload<{ sub: number }>(token);
+        setFid(payload.sub);
+      } catch {
+        // user hasn’t approved yet; you can show a “Sign in with Farcaster” button as fallback
+      }
+    })();
   }, [game]);
+
+  useEffect(() => {
+    // solved if no zeros remain and equals solution (you already compute stop on solved)
+    if (!game) return;
+    const equalsSolution = boardsEqual(game.currentBoard, game.solution);
+    if (equalsSolution && fid && !boardSubmitted) {
+      (async () => {
+        try {
+          await sdk.quickAuth.fetch('/api/submit', {
+            method: 'POST',
+            headers: { 'content-type': 'application/json' },
+            body: JSON.stringify({ seconds }),
+          });
+          setBoardSubmitted(true);
+        } catch { /* ignore */ }
+      })();
+    }
+  }, [game, fid, boardSubmitted, seconds]);
 
   const handleInput = useCallback(
     (value: number) => {
@@ -179,7 +211,30 @@ export default function Home() {
             >
               New game
             </button>
+            <button
+              onClick={async () => {
+                try {
+                  const r = await fetch('/api/leaderboard');
+                  const j = await r.json();
+                  setLeaders(j.rows || []);
+                } catch {}
+              }}
+              className="px-3 py-2 rounded-md bg-emerald-600 text-white hover:bg-emerald-700 shadow"
+            >
+              View leaderboard
+            </button>
           </div>
+
+          {leaders.length > 0 && (
+            <div className="w-full max-w-xs text-left text-sm bg-white/70 dark:bg-neutral-800/70 rounded p-3 shadow">
+              <div className="font-medium mb-2">This week’s top times</div>
+              <ol className="list-decimal list-inside space-y-1">
+                {leaders.map((row, i) => (
+                  <li key={row.fid}>{row.best_seconds}s — FID {row.fid}</li>
+                ))}
+              </ol>
+            </div>
+          )}
 
           <NumberPad onInput={handleInput} onErase={handleErase} />
 
@@ -191,4 +246,13 @@ export default function Home() {
     </div>
     </>
   );
+}
+
+function decodeJwtPayload<T = any>(token: string): T {
+  const base64url = token.split(".")[1];
+  const base64 = base64url.replace(/-/g, "+").replace(/_/g, "/");
+  const json = decodeURIComponent(
+    atob(base64).split("").map(c => "%" + ("00"+c.charCodeAt(0).toString(16)).slice(-2)).join("")
+  );
+  return JSON.parse(json) as T;
 }
