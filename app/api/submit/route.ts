@@ -1,11 +1,12 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@farcaster/quick-auth";
-import { sql } from "@/lib/db";
+import { getSql } from "@/lib/db";
 import { weekStartUtc } from "@/lib/week";
 
 export const runtime = "nodejs";
 
 async function ensureSchema() {
+  const sql = getSql();
   await sql/* sql */`
     create table if not exists scores (
       fid          bigint not null,
@@ -19,6 +20,7 @@ async function ensureSchema() {
 
 export async function POST(req: Request) {
   try {
+    const sql = getSql();
     await ensureSchema();
 
     const auth = req.headers.get("authorization") || "";
