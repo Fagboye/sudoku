@@ -68,9 +68,23 @@ export default function Home() {
     };
   }, [isRunning]);
 
-  // Signal Farcaster Mini App readiness immediately on mount
+  // Signal Farcaster Mini App readiness after first paint
   useEffect(() => {
-    sdk.actions.ready().catch(() => {});
+    let called = false;
+    const callReady = () => {
+      if (called) return;
+      called = true;
+      sdk.actions.ready().catch(() => {});
+    };
+    const scheduleAfterPaint = () => requestAnimationFrame(() => requestAnimationFrame(callReady));
+    if (document.readyState === "complete" || document.readyState === "interactive") {
+      scheduleAfterPaint();
+    } else {
+      window.addEventListener("DOMContentLoaded", scheduleAfterPaint, { once: true });
+    }
+    return () => {
+      called = true;
+    };
   }, []);
 
   // auto-attempt Quick Auth once the UI is ready (will be silent if a token already exists)
