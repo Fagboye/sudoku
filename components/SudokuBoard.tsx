@@ -6,7 +6,6 @@ import type { SudokuBoard } from "@/lib/sudoku";
 type Props = {
   startingBoard: SudokuBoard;
   currentBoard: SudokuBoard;
-  onChangeCell: (row: number, col: number, value: number) => void;
   selectedCell: { row: number; col: number } | null;
   setSelectedCell: (pos: { row: number; col: number } | null) => void;
   conflicts: Set<string>;
@@ -15,7 +14,6 @@ type Props = {
 export default function SudokuBoard({
   startingBoard,
   currentBoard,
-  onChangeCell,
   selectedCell,
   setSelectedCell,
   conflicts,

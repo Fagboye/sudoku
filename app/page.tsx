@@ -136,7 +136,7 @@ export default function Home() {
         setIsRunning(false);
       }
     },
-    [game, selected],
+    [game, selected, isRunning, seconds],
   );
 
   const handleErase = useCallback(() => {
@@ -185,7 +185,6 @@ export default function Home() {
         <SudokuBoard
           startingBoard={game.startingBoard}
           currentBoard={game.currentBoard}
-          onChangeCell={(r, c, v) => handleInput(v)}
           selectedCell={selected}
           setSelectedCell={setSelected}
           conflicts={conflicts}
@@ -229,7 +228,7 @@ export default function Home() {
             <div className="w-full max-w-xs text-left text-sm bg-white/70 dark:bg-neutral-800/70 rounded p-3 shadow">
               <div className="font-medium mb-2">This week’s top times</div>
               <ol className="list-decimal list-inside space-y-1">
-                {leaders.map((row, i) => (
+                {leaders.map((row) => (
                   <li key={row.fid}>{row.best_seconds}s — FID {row.fid}</li>
                 ))}
               </ol>
@@ -248,7 +247,7 @@ export default function Home() {
   );
 }
 
-function decodeJwtPayload<T = any>(token: string): T {
+function decodeJwtPayload<T = unknown>(token: string): T {
   const base64url = token.split(".")[1];
   const base64 = base64url.replace(/-/g, "+").replace(/_/g, "/");
   const json = decodeURIComponent(
