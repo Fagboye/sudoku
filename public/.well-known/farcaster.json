@@ -1,14 +1,14 @@
 {
 
     "accountAssociation": {
-        "header": "eyJmaWQiOjg5NjkxNCwidHlwZSI6ImN1c3RvZHkiLCJrZXkiOiIweDgzMTBGQjFmZjBjM2FEQ2U4Y2E4NzY0ODIxNDVDQjcyODc1OGI1NUIifQ",
+        "header": "eyJmaWQiOjExODMxMzEsInR5cGUiOiJjdXN0b2R5Iiwia2V5IjoiMHgwRUJkZDYyYWZGN0E2N0MwNzhEM2M3MjM1MTA3ZEJCYjM0QTA5ZTY5In0",
         "payload": "eyJkb21haW4iOiJzdWRva3Utcm91Z2UtemV0YS52ZXJjZWwuYXBwIn0",
-        "signature": "MHgyODkzMGViN2EyZDdjMzBjOTkzOTgyN2ExY2IwMjFmYzEyYzkyMTQ3MmQ1OWE0NjhiN2JmYmY4YjczZjc0YjMwMTU2ZDdiYzFiNWVlZWRjMTE3YWU2Y2E1MWViZDMzMDAyMTIxOGY4OGRhNTg2NzAwMWI4ZGQ0NTNjNDlkNjJiNDFi"
+        "signature": "MHhmYzJmMmExNTAwNjY1MTgyNWE4YTZjNDZjYTNhMmU2OTczY2IyODY5NGRlODk0OTRmZTBmNzg0N2M1NDIxMDUwMWY1YWI5YmQ0OTJkY2Q0MTZkNmNkOTU3ZjRjMjAxYjE3MzliZGNmMzkxZjkxNWFlZWE3NzdlZTM1NzZmYzczZDFi"
         },
       
   "miniapp": {
     "version": "1",
-    "name": "Sudoku",
+    "name": "Sudoku", 
     "iconUrl": "https://sudoku-rouge-zeta.vercel.app/sudoku.png?v=3",
     "splashImageUrl": "https://sudoku-rouge-zeta.vercel.app/sudoku.png?v=3",
     "homeUrl": "https://sudoku-rouge-zeta.vercel.app",
