@@ -166,22 +166,31 @@ export default function Home() {
 
           {/* Difficulty removed: fixed to hard */}
 
-          <div className="flex gap-2 justify-center w-full">
+          <div className="flex gap-2 justify-center w-full max-w-[320px]">
+            <button
+              onClick={handleErase}
+              className="px-3 py-2 rounded-md bg-neutral-200 dark:bg-neutral-800 hover:bg-neutral-300 dark:hover:bg-neutral-700 shadow w-full"
+            >
+              Erase
+            </button>
+          </div>
+
+          <NumberPad onInput={handleInput} />
+
+          <div className="flex gap-2 justify-center w-full max-w-[320px]">
             <button
               onClick={resetBoard}
-              className="px-3 py-2 rounded-md bg-neutral-200 dark:bg-neutral-800 hover:bg-neutral-300 dark:hover:bg-neutral-700 shadow"
+              className="px-3 py-2 rounded-md bg-rose-500 text-white hover:bg-rose-600 shadow w-full"
             >
               Reset
             </button>
             <button
               onClick={giveNewGame}
-              className="px-3 py-2 rounded-md bg-blue-600 text-white hover:bg-blue-700 shadow"
+              className="px-3 py-2 rounded-md bg-blue-600 text-white hover:bg-blue-700 shadow w-full"
             >
               New game
             </button>
           </div>
-
-          <NumberPad onInput={handleInput} onErase={handleErase} />
 
           {solved ? (
             <div className="text-emerald-600 dark:text-emerald-400 font-medium">Solved! 🎉</div>

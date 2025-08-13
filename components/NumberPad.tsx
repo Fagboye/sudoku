@@ -2,10 +2,9 @@
 
 type Props = {
   onInput: (value: number) => void;
-  onErase: () => void;
 };
 
-export default function NumberPad({ onInput, onErase }: Props) {
+export default function NumberPad({ onInput }: Props) {
   return (
     <div className="flex flex-col items-center gap-3 w-full">
       <div className="grid grid-cols-3 gap-2 w-full max-w-[320px]">
@@ -19,12 +18,6 @@ export default function NumberPad({ onInput, onErase }: Props) {
           </button>
         ))}
       </div>
-      <button
-        onClick={onErase}
-        className="h-10 w-full max-w-[320px] rounded-lg bg-rose-500 text-white hover:bg-rose-600 transition text-sm shadow"
-      >
-        Erase
-      </button>
     </div>
   );
 }
