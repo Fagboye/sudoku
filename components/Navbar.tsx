@@ -17,11 +17,15 @@ export default function Navbar() {
   const loadContextUser = useCallback(async () => {
     try {
       // Mini App hosts expose user info in the runtime context
-      const anySdk = sdk as unknown as { context?: Promise<any> };
-      if (anySdk.context) {
-        const ctx = await anySdk.context;
-        if (ctx && ctx.user) {
-          const { fid, username, displayName, pfpUrl } = ctx.user as MiniAppUser;
+      type MiniAppContext = { user?: MiniAppUser };
+      const maybeContextProvider = sdk as unknown as { context?: Promise<unknown> };
+      const isMiniAppContext = (v: unknown): v is MiniAppContext =>
+        typeof v === "object" && v !== null && "user" in (v as Record<string, unknown>);
+
+      if (maybeContextProvider.context) {
+        const ctxUnknown = await maybeContextProvider.context;
+        if (isMiniAppContext(ctxUnknown) && ctxUnknown.user) {
+          const { fid, username, displayName, pfpUrl } = ctxUnknown.user;
           setUser({ fid, username, displayName, pfpUrl });
         }
       }
