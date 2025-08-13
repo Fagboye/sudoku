@@ -65,13 +65,10 @@ export default function Home() {
     };
   }, [isRunning]);
 
-  // Signal Farcaster Mini App readiness once UI is mounted and initial game state exists
+  // Signal Farcaster Mini App readiness immediately after mount
   useEffect(() => {
-    if (game) {
-      // Do not block render; a simple call is enough
-      sdk.actions.ready().catch(() => {});
-    }
-  }, [game]);
+    sdk.actions.ready().catch(() => {});
+  }, []);
 
   const handleInput = useCallback(
     (value: number) => {
