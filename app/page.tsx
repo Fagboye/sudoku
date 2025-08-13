@@ -143,10 +143,10 @@ export default function Home() {
 
   return (
     <>
-    <div className="min-h-screen flex flex-col items-center justify-center p-3 sm:p-6 gap-4 sm:gap-6 bg-gradient-to-b from-neutral-50 to-neutral-100 dark:from-neutral-950 dark:to-neutral-900">
-      <h1 className="text-3xl font-semibold tracking-tight">Sudoku</h1>
+    <div className="min-h-[calc(100vh-3.5rem)] flex flex-col items-center justify-center p-3 sm:p-4 gap-3 sm:gap-4 bg-gradient-to-b from-neutral-50 to-neutral-100 dark:from-neutral-950 dark:to-neutral-900">
+      <h1 className="text-2xl sm:text-3xl font-semibold tracking-tight">Sudoku</h1>
 
-      <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 items-center justify-center w-full max-w-[1100px]">
+      <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 items-center justify-center w-full max-w-[1000px]">
         <SudokuBoard
           startingBoard={game.startingBoard}
           currentBoard={game.currentBoard}

@@ -36,7 +36,7 @@ export default function SudokuBoard({
   }, [currentBoard, selectedCell]);
 
   return (
-    <div className="grid grid-cols-9 gap-[1px] bg-neutral-300 dark:bg-neutral-700 p-[1px] rounded-lg select-none shadow w-full max-w-[520px]">
+    <div className="grid grid-cols-9 gap-[1px] bg-neutral-300 dark:bg-neutral-700 p-[1px] rounded-lg select-none shadow w-full max-w-[380px] sm:max-w-[520px]">
       {currentBoard
         .map((row, rIdx) =>
           row.map((cell, cIdx) => {
