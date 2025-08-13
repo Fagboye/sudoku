@@ -35,6 +35,8 @@ export default function Navbar() {
   }, []);
 
   useEffect(() => {
+    // Notify MiniApps host that the UI is ready as soon as navbar mounts
+    sdk.actions.ready().catch(() => {});
     loadContextUser();
   }, [loadContextUser]);
 
